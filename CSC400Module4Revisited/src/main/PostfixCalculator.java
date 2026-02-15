@@ -17,7 +17,7 @@ public class PostfixCalculator {
 				stack.push(Integer.parseInt(element));
 			} else if (isOperator(element)) {
 				if (stack.size() < 2) {
-					throw new IllegalArguementException("Invalid postfix expression: insufficient operands");
+					throw new IllegalArgumentException("Invalid postfix expression: insufficient operands");
 				}
 // Calculate expression when two operands are in stack and operator found		
 // IMPROVEMENTS: Exceptions used instead of Integer.MIN_VALUE to avoid conflict with legitimate calculations
@@ -71,10 +71,8 @@ public class PostfixCalculator {
 			return false;
 		}
 	}
-// Helper function to check for operator	
-	private boolean isOperator(String str) {
-		return str.equals("+") || str.equals("-") || str.equals("*") || str.equals("/") || str.equals("%");
-	}
+// IMPROVEMENT: changed boolean helper function to set of operators for cleaner code and extensibility
+	private static final Set<String> OPERATORS = Set.of("+", "-", "*", "/", "%");
 // Code to read file and calculate postfix expression line by line	
 	public void fileEx(String filename) {
 		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
@@ -104,7 +102,7 @@ public class PostfixCalculator {
 		String[] testEx = {
 				"4 2 * 3 +",   // read as (4 * 2) + 3; expected result = 11
 				"5 3 + 7 *",   // read as (5 + 3) * 7; expected result = 56
-				"42 * +",	   // read as (4 * 2) +; expected result = error	
+				"4 2 * +",	   // read as (4 * 2) +; expected result = error	
 				"12 3 / 5 *",  // read as (12 / 3) * 5; expected result = 20	
 				"70 8 % 1 -"   // read as (70 % 8) - 1; expected result = 5 
 		};
