@@ -17,10 +17,10 @@ public class PostfixCalculator {
 				stack.push(Integer.parseInt(element));
 			} else if (isOperator(element)) {
 				if (stack.size() < 2) {
-					System.out.println("Error: Invalid postfix expression");
-					return Integer.MIN_VALUE;
+					throw new IllegalArguementException("Invalid postfix expression: insufficient operands");
 				}
-// Calculate expression when two operands are in stack and operator found				
+// Calculate expression when two operands are in stack and operator found		
+// IMPROVEMENTS: Exceptions used instead of Integer.MIN_VALUE to avoid conflict with legitimate calculations
 				int b = stack.pop();
 				int a = stack.pop();
 				int result = 0;
@@ -37,32 +37,27 @@ public class PostfixCalculator {
 					break;
 				case "/":
 					if (b == 0) {
-						System.out.println("Error: Cannot divide by zero.");
-						return Integer.MIN_VALUE;
+						throw new IllegalArgumentException("Division by zero is not allowed.");
 					}
 					result = a / b;
 					break;
 				case "%":
 					if (b == 0) {
-						System.out.println("Error: Cannot divide by zero.");
-						return Integer.MIN_VALUE;
+						throw new IllegalArgumentException("Division by zero is not allowed.");
 					}
 					result = a % b;
 					break;
 				default:
-					System.out.println("Error: Invalid operator " + element);
-					return Integer.MIN_VALUE;						
+					throw new IllegalArgumentException("Invalid operator: " + element);					
 				}
 				stack.push(result);
 			} else {
-				System.out.println("Error: Invalid element: " + element);
-				return Integer.MIN_VALUE;
+				throw new IllegalArgumentException("Invalid token: " + element);
 			}
 		}
 // Print error if expression cannot be calculated		
 		if (stack.size() != 1) {
-			System.out.println("Error: Invalid postfix expression.");
-			return Integer.MIN_VALUE;
+			throw new IllegalArgumentException("Invalid postfix expression: excessive operands.");
 		}
 		
 		return stack.pop();
@@ -87,9 +82,12 @@ public class PostfixCalculator {
 			int lineNumber = 1;
 			while ((line = br.readLine()) != null) {
 				System.out.println("Expression " + lineNumber + ": " + line);
-				int result = evaluatePostfix(line);
-				if (result != Integer.MIN_VALUE) {
+// IMPROVEMENT: added try/catch block to handle errors. 				
+				try {
+					int result = evaluatePostfix(line);
 					System.out.println("Result: " + result);
+				} catch(IllegalArgumentException e) {
+					System.out.println("Error: " + e.getMessage());
 				}
 				System.out.println();
 				lineNumber++;
@@ -113,9 +111,12 @@ public class PostfixCalculator {
 // Loop to calculate example expressions		
 		for (String expression : testEx) {
 			System.out.println("Executing: " + expression);
-			int result = calculator.evaluatePostfix(expression);
-			if (result != Integer.MIN_VALUE) {
+// IMPROVEMENT: added try/catch block to handle errors.
+			try {
+				int result = calculator.evaluatePostfix(expression);
 				System.out.println("Result: " + result);
+			} catch (IllegalArgumentException e) {
+				System.out.println("Error: " + e.getMessage());
 			}
 			System.out.println("------------------------------");
 		}
