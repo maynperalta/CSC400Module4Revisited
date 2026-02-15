@@ -1,6 +1,7 @@
 package main;
 
 import java.util.Stack;
+import java.util.Set;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.BufferedReader;
@@ -15,7 +16,8 @@ public class PostfixCalculator {
 		for (String element : elements) {
 			if(isNumeric(element)) {
 				stack.push(Integer.parseInt(element));
-			} else if (isOperator(element)) {
+// IMPROVEMENT: Use OPERATORS set for switch case instead of helper function.
+			} else if (OPERATORS.contains(element)) {
 				if (stack.size() < 2) {
 					throw new IllegalArgumentException("Invalid postfix expression: insufficient operands");
 				}
